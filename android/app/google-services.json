@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "648518937637",
+    "project_id": "streamio-744e5",
+    "storage_bucket": "streamio-744e5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:648518937637:android:390cf098fd4508bfbca3cc",
+        "android_client_info": {
+          "package_name": "com.streamio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "648518937637-7hvrv5pt073bi5cpcdvfserc75ruk4rd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVkVDSc8yphcfLr7HyLIxW6XUjcitHmEM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "648518937637-7hvrv5pt073bi5cpcdvfserc75ruk4rd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
