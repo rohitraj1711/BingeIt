@@ -113,6 +113,13 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    
+    // Add react-native-vector-icons fonts
+    project.ext.vectoricons = [
+        iconFontNames: [ 'Ionicons.ttf' ] // Include only Ionicons for now
+    ]
+    
+    apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
 }
 
 dependencies {
@@ -125,3 +132,5 @@ dependencies {
         implementation jscFlavor
     }
 }
+
+apply plugin: 'com.google.gms.google-services'

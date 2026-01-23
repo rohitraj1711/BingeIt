@@ -1,14 +1,12 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Platform } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Import tab screens
-import ActivityTab from '../screens/tabs/ActivityTab';
 import HomeTab from '../screens/tabs/HomeTab';
+import SearchTab from '../screens/tabs/SearchTab';
 import NotificationsTab from '../screens/tabs/NotificationsTab';
 import ProfileTab from '../screens/tabs/ProfileTab';
-import SearchTab from '../screens/tabs/SearchTab';
 
 const Tab = createBottomTabNavigator();
 
@@ -65,16 +63,7 @@ export default function TabNavigator() {
           ),
         }}
       />
-      <Tab.Screen
-        name="ActivityTab"
-        component={ActivityTab}
-        options={{
-          title: 'Activity',
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="history" size={size} color={color} />
-          ),
-        }}
-      />
+
       <Tab.Screen
         name="ProfileTab"
         component={ProfileTab}

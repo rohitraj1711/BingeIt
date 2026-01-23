@@ -21,7 +21,8 @@ export default function SignUp({ navigation }: Props) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const { signUp } = useAuth();
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const { signUp, signInWithGoogle } = useAuth();
 
   const handleSignUp = async () => {
     if (password !== confirmPassword) {
@@ -76,6 +77,23 @@ export default function SignUp({ navigation }: Props) {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    setGoogleLoading(true);
+    try {
+      await signInWithGoogle();
+      navigation.navigate('Home');
+    } catch (error: any) {
+      console.error('Google Sign-In error:', error);
+      if (error.code === '12501') {
+        // User cancelled the sign-in
+        return;
+      }
+      Alert.alert("Error", "Failed to sign in with Google. Please try again.");
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
+
   return (
     <AuthGuard requireAuth={false}>
       <View style={styles.container}>
@@ -118,6 +136,22 @@ export default function SignUp({ navigation }: Props) {
           >
             <Text style={styles.buttonText}>
               {loading ? "Creating Account..." : "Sign Up"}
+            </Text>
+          </TouchableOpacity>
+
+          <View style={styles.divider}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>OR</Text>
+            <View style={styles.dividerLine} />
+          </View>
+
+          <TouchableOpacity
+            style={[styles.googleButton, googleLoading && styles.buttonDisabled]}
+            onPress={handleGoogleSignIn}
+            disabled={googleLoading}
+          >
+            <Text style={styles.googleButtonText}>
+              {googleLoading ? "Signing In..." : "Sign in with Google"}
             </Text>
           </TouchableOpacity>
 
@@ -177,6 +211,33 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  divider: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: "#444",
+  },
+  dividerText: {
+    color: "#888",
+    paddingHorizontal: 10,
+    fontSize: 14,
+  },
+  googleButton: {
+    backgroundColor: "#fff",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  googleButtonText: {
+    color: "#000",
     fontSize: 16,
     fontWeight: "600",
   },

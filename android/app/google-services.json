@@ -1,33 +1,41 @@
 {
   "project_info": {
-    "project_number": "648518937637",
-    "project_id": "streamio-744e5",
-    "storage_bucket": "streamio-744e5.firebasestorage.app"
+    "project_number": "25709236016",
+    "project_id": "bingeit-9a706",
+    "storage_bucket": "bingeit-9a706.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:648518937637:android:390cf098fd4508bfbca3cc",
+        "mobilesdk_app_id": "1:25709236016:android:6cfb4747abf243aa9282f5",
         "android_client_info": {
-          "package_name": "com.streamio"
+          "package_name": "com.bingeit"
         }
       },
       "oauth_client": [
         {
-          "client_id": "648518937637-7hvrv5pt073bi5cpcdvfserc75ruk4rd.apps.googleusercontent.com",
+          "client_id": "25709236016-mu8e5m5j9kfqcbnde0q8hh1n7stnsnct.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bingeit",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "25709236016-99nookkns333eu9bd5cp45e0lig6qamt.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDVkVDSc8yphcfLr7HyLIxW6XUjcitHmEM"
+          "current_key": "AIzaSyACTU7hHZkJsxO-raX4tzv5yg0q7Qrpykw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "648518937637-7hvrv5pt073bi5cpcdvfserc75ruk4rd.apps.googleusercontent.com",
+              "client_id": "25709236016-99nookkns333eu9bd5cp45e0lig6qamt.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -3,7 +3,7 @@ import {
   ActivityIndicator,
   Dimensions,
   Image,
-  Linking,
+  Modal,
   ScrollView,
   StyleSheet,
   Text,
@@ -11,6 +11,7 @@ import {
   View
 } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import YoutubePlayer from 'react-native-youtube-iframe';
 
 const API_KEY = "da0907ccc71311c1b0909aed63292a33";
 const { width } = Dimensions.get('window');
@@ -55,6 +56,7 @@ export default function MovieDetails({ route, navigation }: Props) {
   const { id } = route.params || { id: '1' };
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showTrailerModal, setShowTrailerModal] = useState(false);
 
   useEffect(() => {
     fetch(
@@ -92,14 +94,18 @@ export default function MovieDetails({ route, navigation }: Props) {
   }
 
   // Get YouTube Trailer
-  const trailer = movie.videos?.results?.find((v: Video) => 
+  const trailer = movie.videos?.results?.find((v: Video) =>
     v.type === "Trailer" && v.site === "YouTube"
   )?.key;
 
   const handleWatchTrailer = () => {
     if (trailer) {
-      Linking.openURL(`https://www.youtube.com/watch?v=${trailer}`);
+      setShowTrailerModal(true);
     }
+  };
+
+  const closeTrailerModal = () => {
+    setShowTrailerModal(false);
   };
 
   const formatRuntime = (minutes: number) => {
@@ -130,7 +136,7 @@ export default function MovieDetails({ route, navigation }: Props) {
           style={styles.backdropImage}
           resizeMode="cover"
         />
-        
+
         {/* Play Button Overlay */}
         {trailer && (
           <TouchableOpacity style={styles.playButtonOverlay} onPress={handleWatchTrailer}>
@@ -181,14 +187,14 @@ export default function MovieDetails({ route, navigation }: Props) {
         {/* Movie Details */}
         <View style={styles.detailsContainer}>
           <Text style={styles.sectionTitle}>Movie Details</Text>
-          
+
           {movie.budget > 0 && (
             <View style={styles.detailRow}>
               <Text style={styles.detailLabel}>Budget:</Text>
               <Text style={styles.detailValue}>{formatBudget(movie.budget)}</Text>
             </View>
           )}
-          
+
           {movie.revenue > 0 && (
             <View style={styles.detailRow}>
               <Text style={styles.detailLabel}>Revenue:</Text>
@@ -212,6 +218,30 @@ export default function MovieDetails({ route, navigation }: Props) {
           </TouchableOpacity>
         </View>
       </View>
+
+      {/* YouTube Trailer Modal */}
+      <Modal
+        visible={showTrailerModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={closeTrailerModal}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <TouchableOpacity style={styles.closeButton} onPress={closeTrailerModal}>
+              <Ionicons name="close" size={30} color="#fff" />
+            </TouchableOpacity>
+
+            {trailer && (
+              <YoutubePlayer
+                height={250}
+                play={showTrailerModal}
+                videoId={trailer}
+              />
+            )}
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }
@@ -417,5 +447,27 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 10,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: width * 0.95,
+    backgroundColor: '#1a1a2e',
+    borderRadius: 12,
+    padding: 20,
+    position: 'relative',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    zIndex: 10,
+    backgroundColor: 'rgba(123, 44, 191, 0.8)',
+    padding: 8,
+    borderRadius: 20,
   },
 });
