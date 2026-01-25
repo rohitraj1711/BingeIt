@@ -195,7 +195,7 @@ export default function SearchTab() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
-      
+
       {/* Gradient Background using layered views */}
       <View style={styles.gradientLayer1} />
       <View style={styles.gradientLayer2} />
@@ -285,7 +285,7 @@ export default function SearchTab() {
                       </Text>
                     </View>
                     <Text style={styles.resultYear}>{getYear(result)}</Text>
-                    {result.vote_average && result.vote_average > 0 && (
+                    {!!result.vote_average && result.vote_average > 0 && (
                       <View style={styles.ratingBadge}>
                         <Ionicons name="star" size={12} color="#FFD700" />
                         <Text style={styles.ratingText}>
