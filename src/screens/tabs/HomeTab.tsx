@@ -99,21 +99,19 @@ export default function HomeTab({ navigation }: { navigation: any }) {
     <ScrollView style={styles.container}>
       <View style={[styles.header, { paddingTop: insets.top + 20 }]}>
         <Text style={styles.title}>Binge It</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-          <Text style={styles.profileIcon}>👤</Text>
-        </TouchableOpacity>
       </View>
 
       <Text style={styles.welcomeText}>
         Welcome back, {user?.displayName || user?.email?.split('@')[0] || 'User'}!
       </Text>
 
-      {renderMovieSection('🔥 Trending Now', trendingMovies, 'trending-up')}
-      {renderMovieSection('🎬 Popular Movies', popularMovies, 'heart')}
-      {renderMovieSection('⭐ Top Rated', topRatedMovies, 'trophy')}
+      {renderMovieSection(' Trending Now', trendingMovies, 'trending-up')}
+      {renderMovieSection(' Popular Movies', popularMovies, 'heart')}
+      {renderMovieSection(' Top Rated', topRatedMovies, 'trophy')}
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>📚 Browse Categories</Text>
+        <Text style={styles.categoryHeading}>Browse Categories</Text>
+
         <View style={styles.categoriesContainer}>
           {[
             { title: 'Action Movies', icon: 'rocket-outline', slug: 'action-movies' },
@@ -225,27 +223,37 @@ const styles = StyleSheet.create({
     marginLeft: 4,
     fontWeight: 'bold',
   },
+  categoryHeading: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#fff",
+    marginBottom: 15, // Added spacing below heading
+  },
   categoriesContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: 'space-between',
+    gap: 12,
   },
   categoryCard: {
-    width: '48%',
+    width: '48%', // Fixed width for 2-column consistency
+    flexDirection: 'row', // Horizontal layout
     backgroundColor: "#1a1a2e",
-    padding: 15,
-    borderRadius: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 12, // Slightly smaller radius for minimal look
     alignItems: "center",
-    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: 'rgba(123, 44, 191, 0.3)',
   },
   categoryText: {
     color: "#fff",
-    fontSize: 14,
-    fontWeight: "500",
-    marginTop: 10,
-    textAlign: 'center',
+    fontSize: 13,
+    fontWeight: "600",
+    marginLeft: 10, // Space between icon and text
+    flex: 1, // Allow text to wrap if needed
   },
   categoryIcon: {
-    fontSize: 32,
+    fontSize: 18, // Smaller icon
+    color: '#7b2cbf',
   },
 });

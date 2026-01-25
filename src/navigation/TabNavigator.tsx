@@ -5,7 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 // Import tab screens
 import HomeTab from '../screens/tabs/HomeTab';
 import SearchTab from '../screens/tabs/SearchTab';
-import NotificationsTab from '../screens/tabs/NotificationsTab';
+import HistoryTab from '../screens/tabs/HistoryTab';
 import ProfileTab from '../screens/tabs/ProfileTab';
 
 const Tab = createBottomTabNavigator();
@@ -14,21 +14,32 @@ export default function TabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: '#e50914',
-        tabBarInactiveTintColor: '#8e8e93',
+        tabBarActiveTintColor: '#7b2cbf',
+        tabBarInactiveTintColor: '#666',
         tabBarStyle: {
-          backgroundColor: '#1a1a1a',
-          borderTopColor: '#333',
-          paddingBottom: Platform.OS === 'ios' ? 20 : 5,
-          height: Platform.OS === 'ios' ? 85 : 60,
+          backgroundColor: '#0f0f23',
+          borderTopWidth: 0,
+          elevation: 0,
+          shadowOpacity: 0,
+          paddingBottom: Platform.OS === 'ios' ? 20 : 10,
+          paddingTop: 10,
+          height: Platform.OS === 'ios' ? 85 : 70,
         },
         headerStyle: {
-          backgroundColor: '#1a1a1a',
+          backgroundColor: '#0f0f23',
+          elevation: 0,
+          shadowOpacity: 0,
+          borderBottomWidth: 0,
+        },
+        headerTitleStyle: {
+          fontWeight: 'bold',
+          fontSize: 18,
         },
         headerTintColor: '#fff',
         tabBarLabelStyle: {
-          fontSize: 12,
+          fontSize: 11,
           fontWeight: '600',
+          marginBottom: 5,
         },
         headerShown: false,
       }}
@@ -54,12 +65,12 @@ export default function TabNavigator() {
         }}
       />
       <Tab.Screen
-        name="NotificationsTab"
-        component={NotificationsTab}
+        name="HistoryTab"
+        component={HistoryTab}
         options={{
-          title: 'Notifications',
+          title: 'History',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="notifications-outline" size={size} color={color} />
+            <Ionicons name="time-outline" size={size} color={color} />
           ),
         }}
       />

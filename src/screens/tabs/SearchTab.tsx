@@ -194,11 +194,7 @@ export default function SearchTab() {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
-
-      {/* Gradient Background using layered views */}
-      <View style={styles.gradientLayer1} />
-      <View style={styles.gradientLayer2} />
+      <StatusBar barStyle="light-content" backgroundColor="#0f0f23" />
 
       <ScrollView
         style={styles.scrollView}
@@ -217,7 +213,7 @@ export default function SearchTab() {
             <Ionicons
               name="search"
               size={22}
-              color="#9b59b6"
+              color="#7b2cbf"
               style={styles.searchIcon}
             />
             <TextInput
@@ -243,7 +239,7 @@ export default function SearchTab() {
         {/* Loading State */}
         {loading && (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#9b59b6" />
+            <ActivityIndicator size="large" color="#7b2cbf" />
             <Text style={styles.loadingText}>Searching...</Text>
           </View>
         )}
@@ -302,7 +298,7 @@ export default function SearchTab() {
         ) : !loading && searchQuery.length > 1 && searchResults.length === 0 ? (
           <View style={styles.emptyContainer}>
             <View style={styles.emptyIconContainer}>
-              <Ionicons name="search-outline" size={64} color="#9b59b6" />
+              <Ionicons name="search-outline" size={64} color="#7b2cbf" />
             </View>
             <Text style={styles.emptyText}>No results found</Text>
             <Text style={styles.emptySubtext}>
@@ -332,7 +328,7 @@ export default function SearchTab() {
                       activeOpacity={0.7}
                     >
                       <View style={styles.recentSearchIconContainer}>
-                        <Ionicons name="time-outline" size={18} color="#9b59b6" />
+                        <Ionicons name="time-outline" size={18} color="#7b2cbf" />
                       </View>
                       <View style={styles.recentSearchInfo}>
                         <Text style={styles.recentSearchText} numberOfLines={1}>
@@ -380,7 +376,7 @@ export default function SearchTab() {
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Discover</Text>
               <View style={styles.discoverCard}>
-                <Ionicons name="sparkles" size={32} color="#9b59b6" />
+                <Ionicons name="sparkles" size={32} color="#7b2cbf" />
                 <Text style={styles.discoverTitle}>
                   Search for your favorite content
                 </Text>
@@ -404,24 +400,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#0f0f23",
   },
-  gradientLayer1: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    top: 0,
-    height: 200,
-    backgroundColor: "#1a0a2e",
-    opacity: 0.8,
-  },
-  gradientLayer2: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    top: 100,
-    height: 200,
-    backgroundColor: "#16213e",
-    opacity: 0.5,
-  },
   scrollView: {
     flex: 1,
   },
@@ -430,7 +408,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: "bold",
     color: "#fff",
     marginBottom: 4,
@@ -451,7 +429,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderWidth: 1,
-    borderColor: "rgba(155, 89, 182, 0.3)",
+    borderColor: "#7b2cbf",
   },
   searchIcon: {
     marginRight: 12,
@@ -498,10 +476,10 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 8,
-    backgroundColor: "rgba(155, 89, 182, 0.2)",
+    backgroundColor: "rgba(123, 44, 191, 0.2)",
   },
   clearAllText: {
-    color: "#9b59b6",
+    color: "#7b2cbf",
     fontSize: 14,
     fontWeight: "600",
   },
@@ -521,7 +499,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: "rgba(155, 89, 182, 0.2)",
+    backgroundColor: "rgba(123, 44, 191, 0.2)",
     justifyContent: "center",
     alignItems: "center",
     marginRight: 14,
@@ -566,9 +544,9 @@ const styles = StyleSheet.create({
     padding: 24,
     alignItems: "center",
     borderRadius: 16,
-    backgroundColor: "rgba(155, 89, 182, 0.15)",
+    backgroundColor: "rgba(123, 44, 191, 0.1)",
     borderWidth: 1,
-    borderColor: "rgba(155, 89, 182, 0.3)",
+    borderColor: "rgba(123, 44, 191, 0.3)",
   },
   discoverTitle: {
     color: "#fff",
@@ -596,7 +574,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "rgba(155, 89, 182, 0.15)",
+    borderColor: "#333",
   },
   resultPoster: {
     width: 55,
@@ -629,13 +607,13 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   mediaTypeBadge: {
-    backgroundColor: "rgba(155, 89, 182, 0.3)",
+    backgroundColor: "rgba(123, 44, 191, 0.2)",
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 6,
   },
   mediaTypeText: {
-    color: "#9b59b6",
+    color: "#7b2cbf",
     fontSize: 11,
     fontWeight: "600",
   },
@@ -665,7 +643,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: "rgba(155, 89, 182, 0.15)",
+    backgroundColor: "rgba(123, 44, 191, 0.1)",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,

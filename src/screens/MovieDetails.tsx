@@ -12,6 +12,8 @@ import {
 } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import YoutubePlayer from 'react-native-youtube-iframe';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 const API_KEY = "da0907ccc71311c1b0909aed63292a33";
 const { width } = Dimensions.get('window');
@@ -57,6 +59,8 @@ export default function MovieDetails({ route, navigation }: Props) {
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
   const [showTrailerModal, setShowTrailerModal] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [favoriteLoading, setFavoriteLoading] = useState(false);
 
   useEffect(() => {
     fetch(
@@ -71,6 +75,27 @@ export default function MovieDetails({ route, navigation }: Props) {
         console.error('Error fetching movie:', error);
         setLoading(false);
       });
+  }, [id]);
+
+  // Check if movie is already in favorites
+  useEffect(() => {
+    const user = auth().currentUser;
+    if (user && id) {
+      const checkFavoriteStatus = async () => {
+        try {
+          const doc = await firestore()
+            .collection('users')
+            .doc(user.uid)
+            .collection('favorites')
+            .doc(String(id))
+            .get();
+          setIsFavorite(doc.exists);
+        } catch (error) {
+          console.error("Error checking favorite status:", error);
+        }
+      };
+      checkFavoriteStatus();
+    }
   }, [id]);
 
   if (loading) {
@@ -98,14 +123,70 @@ export default function MovieDetails({ route, navigation }: Props) {
     v.type === "Trailer" && v.site === "YouTube"
   )?.key;
 
-  const handleWatchTrailer = () => {
+  const handleWatchTrailer = async () => {
     if (trailer) {
       setShowTrailerModal(true);
+
+      // Add to History
+      const user = auth().currentUser;
+      if (user && movie) {
+        try {
+          await firestore()
+            .collection('users')
+            .doc(user.uid)
+            .collection('history')
+            .doc(String(id))
+            .set({
+              id: id,
+              title: movie.title,
+              poster_path: movie.poster_path,
+              watchedAt: firestore.FieldValue.serverTimestamp(),
+            }, { merge: true });
+        } catch (error) {
+          console.error("Error adding to history:", error);
+        }
+      }
     }
   };
 
   const closeTrailerModal = () => {
     setShowTrailerModal(false);
+  };
+
+  const handleToggleFavorite = async () => {
+    const user = auth().currentUser;
+    if (!user) {
+      navigation.navigate('Login'); // Redirect to Login if not authenticated
+      return;
+    }
+
+    setFavoriteLoading(true);
+    const movieRef = firestore()
+      .collection('users')
+      .doc(user.uid)
+      .collection('favorites')
+      .doc(String(id));
+
+    try {
+      if (isFavorite) {
+        await movieRef.delete();
+        setIsFavorite(false);
+      } else {
+        await movieRef.set({
+          id: id,
+          title: movie.title,
+          poster_path: movie.poster_path,
+          vote_average: movie.vote_average,
+          release_date: movie.release_date,
+          addedAt: firestore.FieldValue.serverTimestamp(),
+        });
+        setIsFavorite(true);
+      }
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+    } finally {
+      setFavoriteLoading(false);
+    }
   };
 
   const formatRuntime = (minutes: number) => {
@@ -149,8 +230,25 @@ export default function MovieDetails({ route, navigation }: Props) {
       </View>
 
       <View style={styles.contentContainer}>
-        {/* Title and Rating */}
-        <Text style={styles.title}>{movie.title}</Text>
+        {/* Title and Favorite Button */}
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>{movie.title}</Text>
+          <TouchableOpacity
+            onPress={handleToggleFavorite}
+            disabled={favoriteLoading}
+            style={styles.headerFavoriteButton}
+          >
+            {favoriteLoading ? (
+              <ActivityIndicator size="small" color="#e74c3c" />
+            ) : (
+              <Ionicons
+                name={isFavorite ? "heart" : "heart-outline"}
+                size={28}
+                color={isFavorite ? "#e74c3c" : "#fff"}
+              />
+            )}
+          </TouchableOpacity>
+        </View>
 
         <View style={styles.metaContainer}>
           <View style={styles.ratingContainer}>
@@ -201,21 +299,6 @@ export default function MovieDetails({ route, navigation }: Props) {
               <Text style={styles.detailValue}>{formatBudget(movie.revenue)}</Text>
             </View>
           )}
-        </View>
-
-        {/* Action Buttons */}
-        <View style={styles.actionButtons}>
-          {trailer && (
-            <TouchableOpacity style={styles.trailerButton} onPress={handleWatchTrailer}>
-              <Ionicons name="play-circle" size={24} color="#fff" />
-              <Text style={styles.trailerButtonText}>Watch Trailer</Text>
-            </TouchableOpacity>
-          )}
-
-          <TouchableOpacity style={styles.favoriteButton}>
-            <Ionicons name="heart-outline" size={24} color="#7b2cbf" />
-            <Text style={styles.favoriteButtonText}>Add to Favorites</Text>
-          </TouchableOpacity>
         </View>
       </View>
 
@@ -330,11 +413,21 @@ const styles = StyleSheet.create({
   contentContainer: {
     padding: 20,
   },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
   title: {
     color: '#fff',
     fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 10,
+    flex: 1,
+    marginRight: 10,
+  },
+  headerFavoriteButton: {
+    padding: 5,
   },
   metaContainer: {
     flexDirection: 'row',
@@ -413,40 +506,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
-  },
-  actionButtons: {
-    marginTop: 20,
-  },
-  trailerButton: {
-    backgroundColor: '#7b2cbf',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 15,
-    borderRadius: 12,
-    marginBottom: 15,
-  },
-  trailerButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginLeft: 10,
-  },
-  favoriteButton: {
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: '#7b2cbf',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 15,
-    borderRadius: 12,
-  },
-  favoriteButtonText: {
-    color: '#7b2cbf',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginLeft: 10,
   },
   modalContainer: {
     flex: 1,
