@@ -370,8 +370,8 @@ const styles = StyleSheet.create({
   },
   headerBackButton: {
     position: 'absolute',
-    top: 50,
-    left: 20,
+    top: 20,
+    left: 10,
     zIndex: 10,
     backgroundColor: 'rgba(0,0,0,0.5)',
     padding: 10,
@@ -517,8 +517,8 @@ const styles = StyleSheet.create({
     width: width * 0.95,
     backgroundColor: '#1a1a2e',
     borderRadius: 12,
-    padding: 20,
     position: 'relative',
+    overflow: 'hidden',
   },
   closeButton: {
     position: 'absolute',

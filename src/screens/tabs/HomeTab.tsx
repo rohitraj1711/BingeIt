@@ -97,8 +97,16 @@ export default function HomeTab({ navigation }: { navigation: any }) {
   }
   return (
     <ScrollView style={styles.container}>
-      <View style={[styles.header, { paddingTop: insets.top + 20 }]}>
-        <Text style={styles.title}>Binge It</Text>
+      <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
+        <View style={styles.headerLeftPlaceholder} />
+        <Text style={styles.headerTitle}>Binge it</Text>
+        <TouchableOpacity
+          style={styles.notificationButton}
+          onPress={() => navigation.navigate('Notifications')}
+        >
+          <Ionicons name="notifications-outline" size={24} color="#fff" />
+          <View style={styles.badge} />
+        </TouchableOpacity>
       </View>
 
       <Text style={styles.welcomeText}>
@@ -156,13 +164,42 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: 20,
+    paddingHorizontal: 10,
+    paddingBottom: 5,
     paddingTop: 60,
   },
   title: {
     fontSize: 28,
     fontWeight: "bold",
     color: "#fff",
+  },
+  headerTitle: {
+    fontSize: 42,
+    fontWeight: "bold",
+    color: "#7b2cbf",
+    fontFamily: "cursive",
+    fontStyle: "italic",
+    letterSpacing: 0.5,
+  },
+  headerLeftPlaceholder: {
+    width: 40, // Matches notification button width approx
+  },
+  notificationButton: {
+    padding: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 20,
+    position: 'relative',
+  },
+  badge: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#ff4757',
+    borderWidth: 1,
+    borderColor: '#0f0f23',
   },
   profileIcon: {
     fontSize: 24,

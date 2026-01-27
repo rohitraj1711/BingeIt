@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, Text, TouchableOpacity, View, Image, Modal, ScrollView } from "react-native";
+import { Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useAuth } from "../../lib/AuthContext";
@@ -9,28 +9,7 @@ export default function ProfileTab() {
   const { user, logout } = useAuth();
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [showHelpModal, setShowHelpModal] = useState(false);
-
-  const handleLogout = async () => {
-    Alert.alert(
-      "Logout",
-      "Are you sure you want to logout?",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Logout",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              await logout();
-              // Navigation will be handled by auth state
-            } catch (error) {
-              Alert.alert("Error", "Failed to logout");
-            }
-          }
-        }
-      ]
-    );
-  };
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const menuItems = [
     {
@@ -44,6 +23,50 @@ export default function ProfileTab() {
       onPress: () => setShowHelpModal(true)
     }
   ];
+
+  const handleLogout = async () => {
+    setShowLogoutModal(false);
+    try {
+      await logout();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const LogoutModal = () => (
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={showLogoutModal}
+      onRequestClose={() => setShowLogoutModal(false)}
+    >
+      <View style={styles.modalOverlay}>
+        <View style={styles.alertContent}>
+          <View style={styles.alertIconContainer}>
+            <Ionicons name="log-out" size={32} color="#ff4757" />
+          </View>
+          <Text style={styles.alertTitle}>Log Out</Text>
+          <Text style={styles.alertMessage}>Are you sure you want to log out of your account?</Text>
+
+          <View style={styles.alertButtons}>
+            <TouchableOpacity
+              style={[styles.alertButton, styles.cancelButton]}
+              onPress={() => setShowLogoutModal(false)}
+            >
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.alertButton, styles.confirmButton]}
+              onPress={handleLogout}
+            >
+              <Text style={styles.confirmButtonText}>Log Out</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
 
   const PrivacyModal = () => (
     <Modal
@@ -128,15 +151,15 @@ export default function ProfileTab() {
     <View style={styles.container}>
       <PrivacyModal />
       <HelpModal />
+      <LogoutModal />
+
       <View style={styles.header}>
         <Text style={styles.title}>Profile</Text>
-        <View />
       </View>
 
       <View style={styles.profileSection}>
         <View style={styles.avatarContainer}>
           <View style={styles.avatarCircle}>
-            {/* Using a static generic avatar image or an icon if no user photo */}
             {user?.photoURL ? (
               <Image source={{ uri: user.photoURL }} style={styles.avatarImage} />
             ) : (
@@ -187,13 +210,12 @@ export default function ProfileTab() {
             <Ionicons name="chevron-forward" size={16} color="#666" />
           </TouchableOpacity>
         ))}
-
       </View>
 
       <View style={styles.logoutContainer}>
         <TouchableOpacity
           style={styles.logoutButton}
-          onPress={handleLogout}
+          onPress={() => setShowLogoutModal(true)}
         >
           <Ionicons name="log-out-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
           <Text style={styles.logoutButtonText}>Log Out</Text>
@@ -214,15 +236,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     padding: 20,
-    paddingTop: 60,
+    paddingTop: 20,
   },
   title: {
     fontSize: 28,
     fontWeight: "bold",
     color: "#fff",
-  },
-  settingsButton: {
-    padding: 8,
   },
   profileSection: {
     alignItems: "center",
@@ -239,6 +258,8 @@ const styles = StyleSheet.create({
   },
   avatarText: {
     fontSize: 40,
+    color: '#fff',
+    fontWeight: 'bold',
   },
   userName: {
     fontSize: 24,
@@ -250,44 +271,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#666",
     marginBottom: 16,
-  },
-  editProfileButton: {
-    backgroundColor: "#7b2cbf",
-    paddingHorizontal: 24,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  editProfileText: {
-    color: "#fff",
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  statsSection: {
-    flexDirection: "row",
-    backgroundColor: "#1a1a2e",
-    marginHorizontal: 20,
-    borderRadius: 12,
-    padding: 20,
-    marginBottom: 20,
-  },
-  statItem: {
-    flex: 1,
-    alignItems: "center",
-  },
-  statNumber: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#fff",
-    marginBottom: 4,
-  },
-  statLabel: {
-    fontSize: 12,
-    color: "#666",
-  },
-  statDivider: {
-    width: 1,
-    backgroundColor: "#333",
-    marginHorizontal: 20,
   },
   menuSection: {
     paddingHorizontal: 20,
@@ -309,12 +292,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     marginLeft: 12,
-  },
-  logoutItem: {
-    marginTop: 12,
-  },
-  logoutText: {
-    color: "#ff4757",
   },
   avatarContainer: {
     marginBottom: 16,
@@ -398,23 +375,81 @@ const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    justifyContent: 'flex-end',
+    justifyContent: 'center', // Changed for center alignment of alert
+    alignItems: 'center',
   },
   modalContent: {
     backgroundColor: '#1a1a2e',
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+    borderRadius: 24,
+    width: '100%',
     height: '80%',
+    marginTop: 'auto', // Keep existing bottom sheet behavior for other modals
     padding: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: -4,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
   },
+  // New Alert Styles
+  alertContent: {
+    backgroundColor: '#1a1a2e',
+    width: '85%',
+    borderRadius: 24,
+    padding: 24,
+    alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.5,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+  alertIconContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: 'rgba(255, 71, 87, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  alertTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 8,
+  },
+  alertMessage: {
+    fontSize: 15,
+    color: '#aaa',
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 22,
+  },
+  alertButtons: {
+    flexDirection: 'row',
+    width: '100%',
+    gap: 12,
+  },
+  alertButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cancelButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+  },
+  confirmButton: {
+    backgroundColor: '#ff4757',
+  },
+  cancelButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  confirmButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  // Existing Modal Styles
   modalHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
